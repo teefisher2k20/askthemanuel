@@ -19,8 +19,15 @@ async function askQuestion() {
 
         const data = await response.json();
         
-        // Clear previous content
-        responseDiv.innerHTML = '';
+        // Check for error response
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to get a response');
+        }
+        
+        // Clear previous content safely
+        while (responseDiv.firstChild) {
+            responseDiv.removeChild(responseDiv.firstChild);
+        }
         
         // Create elements safely to prevent XSS
         const heading = document.createElement('h3');
@@ -43,8 +50,10 @@ async function askQuestion() {
         responseDiv.appendChild(answerPara);
         responseDiv.classList.add('show');
     } catch (error) {
-        // Clear previous content
-        responseDiv.innerHTML = '';
+        // Clear previous content safely
+        while (responseDiv.firstChild) {
+            responseDiv.removeChild(responseDiv.firstChild);
+        }
         
         const heading = document.createElement('h3');
         heading.textContent = 'Error:';

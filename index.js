@@ -16,6 +16,14 @@ app.get('/', (req, res) => {
 
 app.post('/ask', (req, res) => {
   const { question } = req.body;
+  
+  // Validate input
+  if (!question || typeof question !== 'string' || question.trim() === '') {
+    return res.status(400).json({ 
+      error: 'Invalid request. Question must be a non-empty string.' 
+    });
+  }
+  
   // Simple echo response for now
   res.json({ 
     question: question,

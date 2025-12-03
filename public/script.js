@@ -19,17 +19,41 @@ async function askQuestion() {
 
         const data = await response.json();
         
-        responseDiv.innerHTML = `
-            <h3>Response:</h3>
-            <p><strong>Your Question:</strong> ${data.question}</p>
-            <p><strong>Answer:</strong> ${data.answer}</p>
-        `;
+        // Clear previous content
+        responseDiv.innerHTML = '';
+        
+        // Create elements safely to prevent XSS
+        const heading = document.createElement('h3');
+        heading.textContent = 'Response:';
+        
+        const questionPara = document.createElement('p');
+        const questionStrong = document.createElement('strong');
+        questionStrong.textContent = 'Your Question: ';
+        questionPara.appendChild(questionStrong);
+        questionPara.appendChild(document.createTextNode(data.question));
+        
+        const answerPara = document.createElement('p');
+        const answerStrong = document.createElement('strong');
+        answerStrong.textContent = 'Answer: ';
+        answerPara.appendChild(answerStrong);
+        answerPara.appendChild(document.createTextNode(data.answer));
+        
+        responseDiv.appendChild(heading);
+        responseDiv.appendChild(questionPara);
+        responseDiv.appendChild(answerPara);
         responseDiv.classList.add('show');
     } catch (error) {
-        responseDiv.innerHTML = `
-            <h3>Error:</h3>
-            <p>Failed to get a response. Please try again.</p>
-        `;
+        // Clear previous content
+        responseDiv.innerHTML = '';
+        
+        const heading = document.createElement('h3');
+        heading.textContent = 'Error:';
+        
+        const errorPara = document.createElement('p');
+        errorPara.textContent = 'Failed to get a response. Please try again.';
+        
+        responseDiv.appendChild(heading);
+        responseDiv.appendChild(errorPara);
         responseDiv.classList.add('show');
     }
 }
